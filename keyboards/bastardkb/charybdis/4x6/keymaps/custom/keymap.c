@@ -50,7 +50,7 @@ static uint16_t auto_pointer_layer_timer = 0;
 #define PT_Z LT(LAYER_POINTER, KC_Z)
 #define PT_SLSH LT(LAYER_POINTER, KC_SLSH)
 
-#define ESC_Q MT(MOD_ESC, KC_Q)
+#define ESC_Q MT(KC_ESC, KC_Q)
 #define GUI_A LGUI_T(KC_A)
 #define ALT_S LALT_T(KC_S)
 #define CTL_D LCTL_T(KC_D)
