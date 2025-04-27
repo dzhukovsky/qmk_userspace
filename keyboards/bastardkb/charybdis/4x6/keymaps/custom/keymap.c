@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include QMK_KEYBOARD_H
+#include "pointing_device.h"
 
 #ifdef CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 #    include "timer.h"
@@ -29,7 +30,8 @@ enum charybdis_keymap_layers {
 };
 
 enum custom_keycodes {
-    VS_DEF = SAFE_RANGE,
+    CARET_SCROLL = SAFE_RANGE,
+    VS_DEF,
     VS_IMPL,
     VS_REF,
 };
@@ -122,12 +124,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [LAYER_MOUSE] = LAYOUT(
-       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-       XXXXXXX, QK_BOOT,  EE_CLR, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX,  EE_CLR, QK_BOOT, XXXXXXX,
-       XXXXXXX, XXXXXXX,  VS_DEF, VS_IMPL,  VS_REF, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-       XXXXXXX, _______, SNIPING, DRGSCRL, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______, XXXXXXX,
-                                  KC_BTN2, KC_BTN1, KC_BTN3,    KC_BTN2, KC_BTN1,
-                                           XXXXXXX, XXXXXXX,    XXXXXXX
+       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,      XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+       XXXXXXX, QK_BOOT,  EE_CLR, XXXXXXX,      XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX,  EE_CLR, QK_BOOT, XXXXXXX,
+       XXXXXXX, XXXXXXX,  VS_DEF, VS_IMPL,       VS_REF, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+       XXXXXXX, _______, SNIPING, DRGSCRL, CARET_SCROLL, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______, XXXXXXX,
+                                       KC_BTN2, KC_BTN1, KC_BTN3,    KC_BTN2, KC_BTN1,
+                                                XXXXXXX, XXXXXXX,    XXXXXXX
   ),
 };
 // clang-format on
@@ -172,9 +174,50 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 void rgb_matrix_update_pwm_buffers(void);
 #endif
 
+
+
+#define CARET_SCROLL_THRESHOLD 40
+
+static int16_t caret_accum_x = 0;
+static int16_t caret_accum_y = 0;
+bool caret_scroll_mode = false;
+
+report_mouse_t pointing_device_task_user(report_mouse_t report) {
+    if (caret_mode) {
+        caret_accum_x += report.x;
+        caret_accum_y += report.y;
+
+        report.x = 0;
+        report.y = 0;
+
+        if (abs(caret_accum_x) + abs(caret_accum_y) > CARET_SCROLL_THRESHOLD) {
+            if (abs(caret_accum_x) >= abs(caret_accum_y)) {
+                if (caret_accum_x > 0) {
+                    tap_code(KC_RIGHT);
+                } else {
+                    tap_code(KC_LEFT);
+                }
+                caret_accum_x = 0;
+            } else {
+                if (caret_accum_y > 0) {
+                    tap_code(KC_DOWN);
+                } else {
+                    tap_code(KC_UP);
+                }
+                caret_accum_y = 0;
+            }
+        }
+    }
+    return report;
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
         switch (keycode) {
+            case CARET_SCROLL:
+                caret_scroll_mode = record->event.pressed;
+                return false;
+
             case VS_DEF:
                 tap_code(KC_BTN1);
                 wait_ms(10);
