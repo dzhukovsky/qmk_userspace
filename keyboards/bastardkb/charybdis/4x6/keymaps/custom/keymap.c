@@ -21,15 +21,21 @@
 #endif // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 
 enum charybdis_keymap_layers {
-    LAYER_BASE = 0,
-    LAYER_NYFU,
+    LAYER_DEF = 0,
+    LAYER_NUFU,
     LAYER_SYM,
     LAYER_NAV,
-    LAYER_POINTER,
+    LAYER_MOUSE,
+};
+
+enum custom_keycodes {
+    VS_DEF = SAFE_RANGE,
+    VS_IMPL,
+    VS_REF,
 };
 
 /** \brief Automatically enable sniping-mode on the pointer layer. */
-#define CHARYBDIS_AUTO_SNIPING_ON_LAYER LAYER_POINTER
+#define CHARYBDIS_AUTO_SNIPING_ON_LAYER LAYER_MOUSE
 
 #ifdef CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 static uint16_t auto_pointer_layer_timer = 0;
@@ -45,20 +51,30 @@ static uint16_t auto_pointer_layer_timer = 0;
 
 #define NAV_SPC LT(LAYER_NAV, KC_SPC)
 
-#define NF_BSPC LT(LAYER_NYFU, KC_BSPC)
-#define SYM_DEL LT(LAYER_SYM, KC_DEL)
-#define PT_Z LT(LAYER_POINTER, KC_Z)
-#define PT_SLSH LT(LAYER_POINTER, KC_SLSH)
+#define NUFU_TAB LT(LAYER_NUFU, KC_TAB)
+#define MOUSE_Z LT(LAYER_MOUSE, KC_Z)
+#define MOUSE_SLSH LT(LAYER_MOUSE, KC_SLSH)
 
-#define ESC_Q MT(KC_ESC, KC_Q)
-#define GUI_A LGUI_T(KC_A)
-#define ALT_S LALT_T(KC_S)
-#define CTL_D LCTL_T(KC_D)
-#define SFT_F LSFT_T(KC_F)
-#define SFT_J LSFT_T(KC_J)
-#define CTL_K LCTL_T(KC_K)
-#define ALT_L LALT_T(KC_L)
-#define GUI_SCLN LGUI_T(KC_SCLN)
+#define SYM MO(LAYER_SYM)
+
+#define GUI_A GUI_T(KC_A)
+#define ALT_S ALT_T(KC_S)
+#define ALT_L ALT_T(KC_L)
+#define ALT_F4 ALT_T(KC_F4)
+#define ALT_6 ALT_T(KC_6)
+
+#define CTL_D CTL_T(KC_D)
+#define CTL_K CTL_T(KC_K)
+#define CTL_F5 CTL_T(KC_F5)
+#define CTL_5 CTL_T(KC_5)
+
+#define SFT_F SFT_T(KC_F)
+#define SFT_J SFT_T(KC_J)
+#define SFT_F6 SFT_T(KC_F6)
+#define SFT_4 SFT_T(KC_4)
+
+#define GUI_SCLN GUI_T(KC_SCLN)
+#define CTL_ESC CTL_T(KC_ESC)
 
 #ifndef POINTING_DEVICE_ENABLE
 #    define DRGSCRL KC_NO
@@ -69,30 +85,30 @@ static uint16_t auto_pointer_layer_timer = 0;
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [LAYER_BASE] = LAYOUT(
-       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-       XXXXXXX,   ESC_Q,    KC_W,    KC_E,    KC_R,    KC_T,       KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, XXXXXXX,
-       XXXXXXX,   GUI_A,   ALT_S,   CTL_D,   SFT_F,    KC_G,       KC_H,   SFT_J,   CTL_K,   ALT_L,GUI_SCLN, XXXXXXX,
-       XXXXXXX,    PT_Z,    KC_X,    KC_C,    KC_V,    KC_B,       KC_N,    KC_M, KC_COMM,  KC_DOT, PT_SLSH, XXXXXXX,
-                                   KC_TAB, NAV_SPC, NF_BSPC,     KC_ENT, SYM_DEL,
-                                           XXXXXXX, XXXXXXX,    XXXXXXX
+  [LAYER_DEF] = LAYOUT(
+       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX,
+       XXXXXXX,    KC_Q,    KC_W,    KC_E,    KC_R,     KC_T,       KC_Y,    KC_U,    KC_I,    KC_O,       KC_P, XXXXXXX,
+       XXXXXXX,   GUI_A,   ALT_S,   CTL_D,   SFT_F,     KC_G,       KC_H,   SFT_J,   CTL_K,   ALT_L,   GUI_SCLN, XXXXXXX,
+       XXXXXXX, MOUSE_Z,    KC_X,    KC_C,    KC_V,     KC_B,       KC_N,    KC_M, KC_COMM,  KC_DOT, MOUSE_SLSH, XXXXXXX,
+                                  CTL_ESC, NAV_SPC, NUFU_TAB,     KC_ENT, SYM,
+                                           XXXXXXX,  XXXXXXX,    XXXXXXX
   ),
 
-  [LAYER_NYFU] = LAYOUT(
+  [LAYER_NUFU] = LAYOUT(
        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-       XXXXXXX,   KC_F7,   KC_F8,   KC_F9,  KC_F12, XXXXXXX,    XXXXXXX,    KC_7,    KC_8,    KC_9,  KC_DEL, XXXXXXX,
-       XXXXXXX,   KC_F4,   KC_F5,   KC_F6,  KC_F11, XXXXXXX,    XXXXXXX,    KC_4,    KC_5,    KC_6, KC_BSPC, XXXXXXX,
-       XXXXXXX,   KC_F1,   KC_F2,   KC_F3,  KC_F10, XXXXXXX,    XXXXXXX,    KC_1,    KC_2,    KC_3, XXXXXXX, XXXXXXX,
-                                  XXXXXXX, XXXXXXX, _______,    XXXXXXX,    KC_0,
+       XXXXXXX, XXXXXXX,   KC_F7,   KC_F8,   KC_F9,  KC_F12,    XXXXXXX,    KC_7,    KC_8,    KC_9, XXXXXXX, XXXXXXX,
+       XXXXXXX, KC_LGUI,  ALT_F4,  CTL_F5,  SFT_F6,  KC_F11,    XXXXXXX,   SFT_4,   CTL_5,   ALT_6, KC_LGUI, XXXXXXX,
+       XXXXXXX, XXXXXXX,   KC_F1,   KC_F2,   KC_F3,  KC_F10,    XXXXXXX,    KC_1,    KC_2,    KC_3,    KC_0, XXXXXXX,
+                                  XXXXXXX, XXXXXXX, _______,    KC_BSPC,  KC_DEL,
                                            XXXXXXX, XXXXXXX,    XXXXXXX
   ),
 
   [LAYER_SYM] = LAYOUT(
        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-       XXXXXXX, KC_TILD, KC_AMPR, KC_ASTR, XXXXXXX, KC_PLUS,    XXXXXXX, KC_LCBR, KC_RCBR, XXXXXXX, KC_PIPE, XXXXXXX,
-       XXXXXXX, KC_MINS,  KC_DLR, KC_PERC, KC_CIRC,  KC_EQL,    XXXXXXX, KC_LPRN, KC_RPRN, KC_DQUO, KC_QUOT, XXXXXXX,
-       XXXXXXX, KC_UNDS, KC_EXLM,   KC_AT, KC_HASH,  KC_GRV,    XXXXXXX, KC_LBRC, KC_RBRC, XXXXXXX, KC_BSLS, XXXXXXX,
-                                  XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, _______,
+       XXXXXXX, KC_TILD, KC_AMPR, KC_ASTR, KC_PLUS, XXXXXXX,    XXXXXXX, KC_LCBR, KC_RCBR,  KC_GRV, XXXXXXX, XXXXXXX,
+       XXXXXXX, KC_MINS,  KC_DLR, KC_PERC, KC_CIRC, XXXXXXX,    XXXXXXX, KC_LPRN, KC_RPRN, KC_QUOT, KC_PIPE, XXXXXXX,
+       XXXXXXX, KC_UNDS, KC_EXLM,   KC_AT, KC_HASH, XXXXXXX,    XXXXXXX, KC_LBRC, KC_RBRC, KC_DQUO, KC_BSLS, XXXXXXX,
+                                  XXXXXXX,  KC_EQL, XXXXXXX,    XXXXXXX, _______,
                                            XXXXXXX, XXXXXXX,    XXXXXXX
   ),
 
@@ -105,11 +121,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                            XXXXXXX, XXXXXXX,    XXXXXXX
   ),
 
-  [LAYER_POINTER] = LAYOUT(
+  [LAYER_MOUSE] = LAYOUT(
        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
        XXXXXXX, QK_BOOT,  EE_CLR, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX,  EE_CLR, QK_BOOT, XXXXXXX,
-       XXXXXXX, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX,    XXXXXXX, KC_LSFT, KC_LCTL, KC_LALT, KC_LGUI, XXXXXXX,
-       XXXXXXX, _______, DRGSCRL, SNIPING, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, SNIPING, DRGSCRL, _______, XXXXXXX,
+       XXXXXXX, XXXXXXX,  VS_DEF, VS_IMPL,  VS_REF, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+       XXXXXXX, _______, SNIPING, DRGSCRL, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______, XXXXXXX,
                                   KC_BTN2, KC_BTN1, KC_BTN3,    KC_BTN2, KC_BTN1,
                                            XXXXXXX, XXXXXXX,    XXXXXXX
   ),
@@ -121,7 +137,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
     if (abs(mouse_report.x) > CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD || abs(mouse_report.y) > CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD) {
         if (auto_pointer_layer_timer == 0) {
-            layer_on(LAYER_POINTER);
+            layer_on(LAYER_MOUSE);
 #        ifdef RGB_MATRIX_ENABLE
             rgb_matrix_mode_noeeprom(RGB_MATRIX_NONE);
             rgb_matrix_sethsv_noeeprom(HSV_GREEN);
@@ -135,7 +151,7 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
 void matrix_scan_user(void) {
     if (auto_pointer_layer_timer != 0 && TIMER_DIFF_16(timer_read(), auto_pointer_layer_timer) >= CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_TIMEOUT_MS) {
         auto_pointer_layer_timer = 0;
-        layer_off(LAYER_POINTER);
+        layer_off(LAYER_MOUSE);
 #        ifdef RGB_MATRIX_ENABLE
         rgb_matrix_mode_noeeprom(RGB_MATRIX_DEFAULT_MODE);
 #        endif // RGB_MATRIX_ENABLE
@@ -155,3 +171,30 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 // Forward-declare this helper function since it is defined in rgb_matrix.c.
 void rgb_matrix_update_pwm_buffers(void);
 #endif
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (record->event.pressed) {
+        switch (keycode) {
+            case VS_DEF:
+                tap_code(KC_BTN1);
+                wait_ms(10);
+                tap_code(KC_F12);
+                return false;
+
+            case VS_IMPL:
+                tap_code(KC_BTN1);
+                wait_ms(10);
+                tap_code16(LCTL(KC_F12));
+                return false;
+
+            case VS_REF:
+                tap_code(KC_BTN1);
+                wait_ms(10);
+                tap_code16(LCTL(KC_K));
+                wait_ms(10);
+                tap_code(KC_R);
+                return false;
+        }
+    }
+    return true;
+}
