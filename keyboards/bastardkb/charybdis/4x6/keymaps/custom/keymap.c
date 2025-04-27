@@ -183,7 +183,7 @@ static int16_t caret_accum_y = 0;
 bool caret_scroll_mode = false;
 
 report_mouse_t pointing_device_task_user(report_mouse_t report) {
-    if (caret_mode) {
+    if (caret_scroll_mode) {
         caret_accum_x += report.x;
         caret_accum_y += report.y;
 
