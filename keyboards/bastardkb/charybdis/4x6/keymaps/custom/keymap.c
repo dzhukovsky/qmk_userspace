@@ -22,7 +22,7 @@
 
 enum charybdis_keymap_layers {
     LAYER_DEF = 0,
-    LAYER_NUFU,
+    LAYER_NUM,
     LAYER_SYM,
     LAYER_NAV,
     LAYER_MOUSE,
@@ -49,12 +49,12 @@ static uint16_t auto_pointer_layer_timer = 0;
 #    endif // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD
 #endif     // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 
-#define NAV_SPC LT(LAYER_NAV, KC_SPC)
 
-#define NUFU_TAB LT(LAYER_NUFU, KC_TAB)
-#define SYM_ENT LT(LAYER_SYM, KC_ENT)
+#define NUM_ENT LT(LAYER_NUM, KC_ENT)
+#define SYM_SPC LT(LAYER_SYM, KC_SPC)
 #define MOUSE_Z LT(LAYER_MOUSE, KC_Z)
 #define MOUSE_SLSH LT(LAYER_MOUSE, KC_SLSH)
+#define NAV_ESC LT(LAYER_NAV, KC_ESC)
 
 #define GUI_A GUI_T(KC_A)
 #define ALT_S ALT_T(KC_S)
@@ -73,7 +73,6 @@ static uint16_t auto_pointer_layer_timer = 0;
 #define SFT_4 SFT_T(KC_4)
 
 #define GUI_SCLN GUI_T(KC_SCLN)
-#define CTL_ESC CTL_T(KC_ESC)
 
 #ifndef POINTING_DEVICE_ENABLE
 #    define DRGSCRL KC_NO
@@ -89,8 +88,26 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        XXXXXXX,    KC_Q,    KC_W,    KC_E,    KC_R,     KC_T,       KC_Y,    KC_U,    KC_I,    KC_O,       KC_P, XXXXXXX,
        XXXXXXX,   GUI_A,   ALT_S,   CTL_D,   SFT_F,     KC_G,       KC_H,   SFT_J,   CTL_K,   ALT_L,   GUI_SCLN, XXXXXXX,
        XXXXXXX, MOUSE_Z,    KC_X,    KC_C,    KC_V,     KC_B,       KC_N,    KC_M, KC_COMM,  KC_DOT, MOUSE_SLSH, XXXXXXX,
-                                   KC_ESC, NAV_SPC, NUFU_TAB,    SYM_ENT, KC_BSPC,
+                                  NAV_ESC, SYM_SPC,  KC_BSPC,     KC_TAB, NUM_ENT,
                                            XXXXXXX,  XXXXXXX,    XXXXXXX
+  ),
+
+  [LAYER_NUM] = LAYOUT(
+       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+       XXXXXXX, XXXXXXX,   KC_F7,   KC_F8,   KC_F9,  KC_F12,    XXXXXXX,    KC_7,    KC_8,    KC_9, XXXXXXX, XXXXXXX,
+       XXXXXXX, KC_LGUI,  ALT_F4,  CTL_F5,  SFT_F6,  KC_F11,    XXXXXXX,   SFT_4,   CTL_5,   ALT_6, KC_LGUI, XXXXXXX,
+       XXXXXXX, XXXXXXX,   KC_F1,   KC_F2,   KC_F3,  KC_F10,    XXXXXXX,    KC_1,    KC_2,    KC_3,    KC_0, XXXXXXX,
+                                  XXXXXXX, XXXXXXX,  KC_DEL,    XXXXXXX, _______,
+                                           XXXXXXX, XXXXXXX,    XXXXXXX
+  ),
+
+  [LAYER_SYM] = LAYOUT(
+       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+       XXXXXXX, XXXXXXX,  KC_GRV, KC_LCBR, KC_RCBR, XXXXXXX,    XXXXXXX, KC_AMPR, KC_ASTR, KC_PLUS, KC_TILD, XXXXXXX,
+       XXXXXXX, KC_PIPE, KC_QUOT, KC_LPRN, KC_RPRN, XXXXXXX,    XXXXXXX,  KC_DLR, KC_PERC, KC_CIRC, KC_MINS, XXXXXXX,
+       XXXXXXX, KC_BSLS, KC_DQUO, KC_LBRC, KC_RBRC, XXXXXXX,    XXXXXXX, KC_EXLM,   KC_AT, KC_HASH, KC_UNDS, XXXXXXX,
+                                  XXXXXXX, _______, XXXXXXX,    XXXXXXX,  KC_EQL,
+                                           XXXXXXX, XXXXXXX,    XXXXXXX
   ),
 
   [LAYER_NAV] = LAYOUT(
@@ -98,25 +115,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
        XXXXXXX, KC_LEFT,   KC_UP, KC_DOWN, KC_RGHT, XXXXXXX,    XXXXXXX, KC_LSFT, KC_LCTL, KC_LALT, KC_LGUI, XXXXXXX,
        XXXXXXX, KC_HOME, KC_PGUP, KC_PGDN,  KC_END, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-                                  XXXXXXX, _______, XXXXXXX,    KC_WBAK, KC_WFWD,
-                                           XXXXXXX, XXXXXXX,    XXXXXXX
-  ),
-
-  [LAYER_NUFU] = LAYOUT(
-       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-       XXXXXXX, XXXXXXX,   KC_F7,   KC_F8,   KC_F9,  KC_F12,    XXXXXXX,    KC_7,    KC_8,    KC_9, XXXXXXX, XXXXXXX,
-       XXXXXXX, KC_LGUI,  ALT_F4,  CTL_F5,  SFT_F6,  KC_F11,    XXXXXXX,   SFT_4,   CTL_5,   ALT_6, KC_LGUI, XXXXXXX,
-       XXXXXXX, XXXXXXX,   KC_F1,   KC_F2,   KC_F3,  KC_F10,    XXXXXXX,    KC_1,    KC_2,    KC_3,    KC_0, XXXXXXX,
-                                  XXXXXXX, XXXXXXX, _______,    XXXXXXX,  KC_DEL,
-                                           XXXXXXX, XXXXXXX,    XXXXXXX
-  ),
-
-  [LAYER_SYM] = LAYOUT(
-       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-       XXXXXXX, KC_TILD, KC_AMPR, KC_ASTR, KC_PLUS, XXXXXXX,    XXXXXXX, KC_LCBR, KC_RCBR,  KC_GRV, XXXXXXX, XXXXXXX,
-       XXXXXXX, KC_MINS,  KC_DLR, KC_PERC, KC_CIRC, XXXXXXX,    XXXXXXX, KC_LPRN, KC_RPRN, KC_QUOT, KC_PIPE, XXXXXXX,
-       XXXXXXX, KC_UNDS, KC_EXLM,   KC_AT, KC_HASH, XXXXXXX,    XXXXXXX, KC_LBRC, KC_RBRC, KC_DQUO, KC_BSLS, XXXXXXX,
-                                  XXXXXXX,  KC_EQL, XXXXXXX,    _______, XXXXXXX,
+                                  _______, XXXXXXX, XXXXXXX,    KC_WBAK, KC_WFWD,
                                            XXXXXXX, XXXXXXX,    XXXXXXX
   ),
 
