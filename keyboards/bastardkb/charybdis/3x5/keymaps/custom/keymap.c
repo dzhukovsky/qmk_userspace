@@ -37,13 +37,9 @@ enum custom_keycodes {
 
 // Combo definitions
 const uint16_t PROGMEM er_combo[] = {KC_E, KC_R, COMBO_END};
-const uint16_t PROGMEM df_combo[] = {KC_D, KC_F, COMBO_END};
-const uint16_t PROGMEM cv_combo[] = {KC_C, KC_V, COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(er_combo, LGUI(KC_SPC)),
-    COMBO(df_combo, LGUI_T(KC_SPC)),
-    COMBO(cv_combo, LALT(KC_LSFT)),
 };
 
 // Caret scroll mode state
@@ -131,7 +127,7 @@ static uint16_t auto_pointer_layer_timer = 0;
 #define LAYOUT_LAYER_POINTER                                                                  \
     QK_BOOT,  EE_CLR, XXXXXXX, DPI_MOD, S_D_MOD, S_D_MOD, DPI_MOD, XXXXXXX,  EE_CLR, QK_BOOT, \
     ______________HOME_ROW_GACS_L______________, ______________HOME_ROW_GACS_R______________, \
-    _______, DRGSCRL, SNIPING, CRT_SCR, XXXXXXX, XXXXXXX, CRT_SCR, SNIPING, DRGSCRL, _______, \
+    _______, CRT_SCR, DRGSCRL, SNIPING, XXXXXXX, XXXXXXX, SNIPING, DRGSCRL, CRT_SCR, _______, \
                       KC_BTN2, KC_BTN1, KC_BTN3, KC_BTN3, KC_BTN1
 
 /**
@@ -278,20 +274,21 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
         accumulated_x += mouse_report.x;
         accumulated_y += mouse_report.y;
 
-        const int16_t threshold = 50;
+        const int16_t threshold_x = 60;
+        const int16_t threshold_y = 40;
 
-        if (accumulated_x > threshold) {
+        if (accumulated_x > threshold_x) {
             tap_code(KC_RGHT);
             accumulated_x = 0;
-        } else if (accumulated_x < -threshold) {
+        } else if (accumulated_x < -threshold_x) {
             tap_code(KC_LEFT);
             accumulated_x = 0;
         }
 
-        if (accumulated_y > threshold) {
+        if (accumulated_y > threshold_y) {
             tap_code(KC_DOWN);
             accumulated_y = 0;
-        } else if (accumulated_y < -threshold) {
+        } else if (accumulated_y < -threshold_y) {
             tap_code(KC_UP);
             accumulated_y = 0;
         }
