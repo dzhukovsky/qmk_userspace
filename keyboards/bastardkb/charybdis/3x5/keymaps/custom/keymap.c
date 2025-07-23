@@ -30,12 +30,24 @@ enum charybdis_keymap_layers {
     LAYER_SYMBOLS,
 };
 
+// Custom keycodes
+enum custom_keycodes {
+    CRT_SCR = SAFE_RANGE,  // Caret scroll mode holder
+};
+
 // Combo definitions
+const uint16_t PROGMEM er_combo[] = {KC_E, KC_R, COMBO_END};
 const uint16_t PROGMEM df_combo[] = {KC_D, KC_F, COMBO_END};
+const uint16_t PROGMEM cv_combo[] = {KC_C, KC_V, COMBO_END};
 
 combo_t key_combos[] = {
-    COMBO(df_combo, LALT(KC_LSFT)),
+    COMBO(er_combo, LGUI(KC_SPC)),
+    COMBO(df_combo, LGUI_T(KC_SPC)),
+    COMBO(cv_combo, LALT(KC_LSFT)),
 };
+
+// Caret scroll mode state
+static bool caret_scroll_mode = false;
 
 // Automatically enable sniping-mode on the pointer layer.
 // #define CHARYBDIS_AUTO_SNIPING_ON_LAYER LAYER_POINTER
@@ -119,7 +131,7 @@ static uint16_t auto_pointer_layer_timer = 0;
 #define LAYOUT_LAYER_POINTER                                                                  \
     QK_BOOT,  EE_CLR, XXXXXXX, DPI_MOD, S_D_MOD, S_D_MOD, DPI_MOD, XXXXXXX,  EE_CLR, QK_BOOT, \
     ______________HOME_ROW_GACS_L______________, ______________HOME_ROW_GACS_R______________, \
-    _______, DRGSCRL, SNIPING, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, SNIPING, DRGSCRL, _______, \
+    _______, DRGSCRL, SNIPING, CRT_SCR, XXXXXXX, XXXXXXX, CRT_SCR, SNIPING, DRGSCRL, _______, \
                       KC_BTN2, KC_BTN1, KC_BTN3, KC_BTN3, KC_BTN1
 
 /**
@@ -222,6 +234,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 // clang-format on
 
+// Custom keycode handler
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case CRT_SCR:
+            caret_scroll_mode = record->event.pressed;
+            return false;
+    }
+    return true;
+}
+
 #ifdef POINTING_DEVICE_ENABLE
 #    ifdef CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
@@ -246,6 +268,40 @@ void matrix_scan_user(void) {
         rgb_matrix_mode_noeeprom(RGB_MATRIX_DEFAULT_MODE);
 #        endif // RGB_MATRIX_ENABLE
     }
+}
+#    else
+report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+    if (caret_scroll_mode) {
+        static int16_t accumulated_x = 0;
+        static int16_t accumulated_y = 0;
+
+        accumulated_x += mouse_report.x;
+        accumulated_y += mouse_report.y;
+
+        const int16_t threshold = 50;
+
+        if (accumulated_x > threshold) {
+            tap_code(KC_RGHT);
+            accumulated_x = 0;
+        } else if (accumulated_x < -threshold) {
+            tap_code(KC_LEFT);
+            accumulated_x = 0;
+        }
+
+        if (accumulated_y > threshold) {
+            tap_code(KC_DOWN);
+            accumulated_y = 0;
+        } else if (accumulated_y < -threshold) {
+            tap_code(KC_UP);
+            accumulated_y = 0;
+        }
+
+        mouse_report.x = 0;
+        mouse_report.y = 0;
+
+        return mouse_report;
+    }
+    return mouse_report;
 }
 #    endif // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 
