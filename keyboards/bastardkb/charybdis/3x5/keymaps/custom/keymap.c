@@ -50,8 +50,8 @@ combo_t key_combos[] = {
 static bool caret_scroll_mode_x = false;
 static bool caret_scroll_mode_y = false;
 
-const int16_t caret_scroll_threshold_x = 60;
-const int16_t caret_scroll_threshold_y = 60;
+const int16_t caret_scroll_threshold_x = 40;
+const int16_t caret_scroll_threshold_y = 40;
 
 // Automatically enable sniping-mode on the pointer layer.
 // #define CHARYBDIS_AUTO_SNIPING_ON_LAYER LAYER_POINTER
@@ -306,6 +306,9 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
             accumulated_x = 0;
         }
         mouse_report.x = 0;
+        if (!caret_scroll_mode_y) {
+            mouse_report.y = 0;
+        }
     }
     if (caret_scroll_mode_y) {
         static int16_t accumulated_y = 0;
@@ -318,6 +321,9 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
             accumulated_y = 0;
         }
         mouse_report.y = 0;
+        if (!caret_scroll_mode_x) {
+            mouse_report.x = 0;
+        }
     }
     return mouse_report;
 }
