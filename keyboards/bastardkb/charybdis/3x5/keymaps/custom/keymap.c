@@ -31,17 +31,10 @@ enum charybdis_keymap_layers {
 };
 
 // Combo definitions
-enum combo_events {
-    DF_LANG_SWITCH,
-    COMBO_LENGTH
-};
-
-uint16_t COMBO_LEN = COMBO_LENGTH;
-
 const uint16_t PROGMEM df_combo[] = {KC_D, KC_F, COMBO_END};
 
 combo_t key_combos[] = {
-    [DF_LANG_SWITCH] = COMBO(df_combo, LALT(KC_LSFT)),
+    COMBO(df_combo, LALT(KC_LSFT)),
 };
 
 // Automatically enable sniping-mode on the pointer layer.
