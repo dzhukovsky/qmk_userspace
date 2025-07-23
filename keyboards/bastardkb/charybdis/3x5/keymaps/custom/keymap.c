@@ -40,10 +40,10 @@ enum custom_keycodes {
 };
 
 // Combo definitions
-const uint16_t PROGMEM cv_combo[] = {KC_C, KC_V, COMBO_END};
+const uint16_t PROGMEM lang_combo[] = {KC_LCTL, KC_LSFT, COMBO_END};
 
 combo_t key_combos[] = {
-    COMBO(cv_combo, LGUI(KC_SPC)),
+    COMBO(lang_combo, LGUI(KC_SPC)),
 };
 
 // Caret scroll mode state
@@ -150,7 +150,7 @@ static uint16_t auto_pointer_layer_timer = 0;
     _______________DEAD_HALF_ROW_______________, _______________DEAD_HALF_ROW_______________, \
     ______________HOME_ROW_GACS_L______________, KC_CAPS, KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, \
     _______________DEAD_HALF_ROW_______________,  KC_INS, KC_HOME, KC_PGDN, KC_PGUP,  KC_END, \
-                      XXXXXXX, _______, XXXXXXX, KC_BSPC,  KC_ENT
+                      XXXXXXX, _______, XXXXXXX,  KC_DEL,  KC_ENT
 
 /**
  * \brief Numeral layout.
