@@ -40,7 +40,7 @@ enum custom_keycodes {
 };
 
 // Combo definitions
-const uint16_t PROGMEM lang_combo[] = {KC_LCTL, KC_LSFT, COMBO_END};
+const uint16_t PROGMEM lang_combo[] = {LCTL_T(KC_D), LSFT_T(KC_F), COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(lang_combo, LGUI(KC_SPC)),
