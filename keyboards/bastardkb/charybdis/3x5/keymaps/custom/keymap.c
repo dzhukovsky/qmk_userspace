@@ -30,6 +30,20 @@ enum charybdis_keymap_layers {
     LAYER_SYMBOLS,
 };
 
+// Combo definitions
+enum combo_events {
+    DF_LANG_SWITCH,
+    COMBO_LENGTH
+};
+
+uint16_t COMBO_LEN = COMBO_LENGTH;
+
+const uint16_t PROGMEM df_combo[] = {KC_D, KC_F, COMBO_END};
+
+combo_t key_combos[] = {
+    [DF_LANG_SWITCH] = COMBO(df_combo, LALT(KC_LSFT)),
+};
+
 // Automatically enable sniping-mode on the pointer layer.
 // #define CHARYBDIS_AUTO_SNIPING_ON_LAYER LAYER_POINTER
 
@@ -127,7 +141,7 @@ static uint16_t auto_pointer_layer_timer = 0;
     _______________DEAD_HALF_ROW_______________, _______________DEAD_HALF_ROW_______________, \
     ______________HOME_ROW_GACS_L______________, KC_CAPS, KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, \
     _______________DEAD_HALF_ROW_______________,  KC_INS, KC_HOME, KC_PGDN, KC_PGUP,  KC_END, \
-                      XXXXXXX, _______, XXXXXXX, KC_BSPC, KC_ENT
+                      XXXXXXX, _______, XXXXXXX, KC_BSPC,  KC_ENT
 
 /**
  * \brief Numeral layout.
