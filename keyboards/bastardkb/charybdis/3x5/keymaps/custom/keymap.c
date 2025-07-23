@@ -40,10 +40,10 @@ enum custom_keycodes {
 };
 
 // Combo definitions
-const uint16_t PROGMEM er_combo[] = {KC_E, KC_R, COMBO_END};
+const uint16_t PROGMEM cv_combo[] = {KC_C, KC_V, COMBO_END};
 
 combo_t key_combos[] = {
-    COMBO(er_combo, LGUI(KC_SPC)),
+    COMBO(cv_combo, LGUI(KC_SPC)),
 };
 
 // Caret scroll mode state
