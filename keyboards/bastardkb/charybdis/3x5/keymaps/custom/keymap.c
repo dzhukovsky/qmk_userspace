@@ -32,7 +32,11 @@ enum charybdis_keymap_layers {
 
 // Custom keycodes
 enum custom_keycodes {
-    CRT_SCR = SAFE_RANGE,  // Caret scroll mode holder
+    CRTSCRX = SAFE_RANGE,     // Caret scroll mode X-axis
+    CRTSCRY,                  // Caret scroll mode Y-axis
+    VS_DEF,
+    VS_IMPL,
+    VS_REF,
 };
 
 // Combo definitions
@@ -43,7 +47,11 @@ combo_t key_combos[] = {
 };
 
 // Caret scroll mode state
-static bool caret_scroll_mode = false;
+static bool caret_scroll_mode_x = false;
+static bool caret_scroll_mode_y = false;
+
+const int16_t caret_scroll_threshold_x = 60;
+const int16_t caret_scroll_threshold_y = 60;
 
 // Automatically enable sniping-mode on the pointer layer.
 // #define CHARYBDIS_AUTO_SNIPING_ON_LAYER LAYER_POINTER
@@ -126,9 +134,9 @@ static uint16_t auto_pointer_layer_timer = 0;
 /** \brief Mouse emulation and pointer functions. */
 #define LAYOUT_LAYER_POINTER                                                                  \
     QK_BOOT,  EE_CLR, XXXXXXX, DPI_MOD, S_D_MOD, S_D_MOD, DPI_MOD, XXXXXXX,  EE_CLR, QK_BOOT, \
-    ______________HOME_ROW_GACS_L______________, ______________HOME_ROW_GACS_R______________, \
-    _______, CRT_SCR, DRGSCRL, SNIPING, XXXXXXX, XXXXXXX, SNIPING, DRGSCRL, CRT_SCR, _______, \
-                      KC_BTN2, KC_BTN1, KC_BTN3, KC_BTN3, KC_BTN1
+    ______________HOME_ROW_GACS_L______________, XXXXXXX,  VS_DEF, VS_IMPL,  VS_REF, XXXXXXX, \
+    _______, CRTSCRX, CRTSCRY, DRGSCRL, SNIPING, SNIPING, DRGSCRL, CRTSCRY, CRTSCRX, _______, \
+                      KC_BTN2, KC_BTN1, KC_BTN3, KC_WBAK, KC_WFWD
 
 /**
  * \brief Navigation layer.
@@ -233,8 +241,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Custom keycode handler
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case CRT_SCR:
-            caret_scroll_mode = record->event.pressed;
+        case CRTSCRX:
+            caret_scroll_mode_x = record->event.pressed;
+            return false;
+        case CRTSCRY:
+            caret_scroll_mode_y = record->event.pressed;
+            return false;
+        case VS_DEF:
+            tap_code(KC_BTN1);
+            wait_ms(10);
+            tap_code(KC_F12);
+            return false;
+        case VS_IMPL:
+            tap_code(KC_BTN1);
+            wait_ms(10);
+            tap_code16(LCTL(KC_F12));
+            return false;
+        case VS_REF:
+            tap_code(KC_BTN1);
+            wait_ms(10);
+            tap_code16(LCTL(KC_K));
+            wait_ms(10);
+            tap_code(KC_R);
             return false;
     }
     return true;
@@ -267,36 +295,29 @@ void matrix_scan_user(void) {
 }
 #    else
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
-    if (caret_scroll_mode) {
+    if (caret_scroll_mode_x) {
         static int16_t accumulated_x = 0;
-        static int16_t accumulated_y = 0;
-
         accumulated_x += mouse_report.x;
-        accumulated_y += mouse_report.y;
-
-        const int16_t threshold_x = 60;
-        const int16_t threshold_y = 40;
-
-        if (accumulated_x > threshold_x) {
+        if (accumulated_x > caret_scroll_threshold_x) {
             tap_code(KC_RGHT);
             accumulated_x = 0;
-        } else if (accumulated_x < -threshold_x) {
+        } else if (accumulated_x < -caret_scroll_threshold_x) {
             tap_code(KC_LEFT);
             accumulated_x = 0;
         }
-
-        if (accumulated_y > threshold_y) {
+        mouse_report.x = 0;
+    }
+    if (caret_scroll_mode_y) {
+        static int16_t accumulated_y = 0;
+        accumulated_y += mouse_report.y;
+        if (accumulated_y > caret_scroll_threshold_y) {
             tap_code(KC_DOWN);
             accumulated_y = 0;
-        } else if (accumulated_y < -threshold_y) {
+        } else if (accumulated_y < -caret_scroll_threshold_y) {
             tap_code(KC_UP);
             accumulated_y = 0;
         }
-
-        mouse_report.x = 0;
         mouse_report.y = 0;
-
-        return mouse_report;
     }
     return mouse_report;
 }
