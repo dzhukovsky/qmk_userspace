@@ -136,7 +136,7 @@ static uint16_t auto_pointer_layer_timer = 0;
     QK_BOOT,  EE_CLR, XXXXXXX, DPI_MOD, S_D_MOD, S_D_MOD, DPI_MOD, XXXXXXX,  EE_CLR, QK_BOOT, \
     ______________HOME_ROW_GACS_L______________, XXXXXXX,  VS_DEF, VS_IMPL,  VS_REF, XXXXXXX, \
     _______, CRTSCRX, CRTSCRY, DRGSCRL, SNIPING, SNIPING, DRGSCRL, CRTSCRY, CRTSCRX, _______, \
-                      KC_BTN2, KC_BTN1, KC_BTN3, KC_WBAK, KC_WFWD
+                      KC_BTN2, KC_BTN1, KC_BTN3, KC_BTN4, KC_BTN5
 
 /**
  * \brief Navigation layer.
@@ -148,8 +148,8 @@ static uint16_t auto_pointer_layer_timer = 0;
  */
 #define LAYOUT_LAYER_NAVIGATION                                                               \
     _______________DEAD_HALF_ROW_______________, _______________DEAD_HALF_ROW_______________, \
-    ______________HOME_ROW_GACS_L______________, KC_CAPS, KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, \
-    _______________DEAD_HALF_ROW_______________,  KC_INS, KC_HOME, KC_PGDN, KC_PGUP,  KC_END, \
+    ______________HOME_ROW_GACS_L______________, KC_CAPS, KC_LEFT,   KC_UP, KC_DOWN, KC_RGHT, \
+    _______________DEAD_HALF_ROW_______________,  KC_INS, KC_HOME, KC_PGUP, KC_PGDN,  KC_END, \
                       XXXXXXX, _______, XXXXXXX,  KC_DEL,  KC_ENT
 
 /**
