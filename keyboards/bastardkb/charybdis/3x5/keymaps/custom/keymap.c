@@ -51,7 +51,7 @@ static bool caret_scroll_mode_x = false;
 static bool caret_scroll_mode_y = false;
 
 const int16_t caret_scroll_threshold_x = 40;
-const int16_t caret_scroll_threshold_y = 40;
+const int16_t caret_scroll_threshold_y = 80;
 
 // Automatically enable sniping-mode on the pointer layer.
 // #define CHARYBDIS_AUTO_SNIPING_ON_LAYER LAYER_POINTER
