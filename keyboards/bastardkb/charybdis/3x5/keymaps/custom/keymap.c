@@ -32,8 +32,7 @@ enum charybdis_keymap_layers {
 
 // Custom keycodes
 enum custom_keycodes {
-    CRTSCR = SAFE_RANGE,     // Caret scroll mode XY-axis
-    CRTSCRX,                 // Caret scroll mode X-axis
+    CRTSCRX = SAFE_RANGE,     // Caret scroll mode X-axis
     CRTSCRY,                 // Caret scroll mode Y-axis
     VS_DEF,
     VS_IMPL,
@@ -52,7 +51,7 @@ static bool caret_scroll_mode_x = false;
 static bool caret_scroll_mode_y = false;
 
 const int16_t caret_scroll_threshold_x = 40;
-const int16_t caret_scroll_threshold_y = 160;
+const int16_t caret_scroll_threshold_y = 120;
 
 // Automatically enable sniping-mode on the pointer layer.
 // #define CHARYBDIS_AUTO_SNIPING_ON_LAYER LAYER_POINTER
@@ -136,7 +135,7 @@ static uint16_t auto_pointer_layer_timer = 0;
 #define LAYOUT_LAYER_POINTER                                                                  \
     QK_BOOT,  EE_CLR, XXXXXXX, DPI_MOD, S_D_MOD, S_D_MOD, DPI_MOD, XXXXXXX,  EE_CLR, QK_BOOT, \
     ______________HOME_ROW_GACS_L______________, XXXXXXX,  VS_DEF, VS_IMPL,  VS_REF, XXXXXXX, \
-    _______,  CRTSCR, CRTSCRY, DRGSCRL, SNIPING, SNIPING, DRGSCRL, CRTSCRY,  CRTSCR, _______, \
+    _______, CRTSCRX, CRTSCRY, DRGSCRL, SNIPING, SNIPING, DRGSCRL, CRTSCRY, CRTSCRX, _______, \
                       KC_BTN2, KC_BTN1, KC_BTN3, KC_BTN4, KC_BTN5
 
 /**
@@ -242,10 +241,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Custom keycode handler
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case CRTSCR:
-            caret_scroll_mode_x = record->event.pressed;
-            caret_scroll_mode_y = record->event.pressed;
-            return false;
         case CRTSCRX:
             caret_scroll_mode_x = record->event.pressed;
             return false;
