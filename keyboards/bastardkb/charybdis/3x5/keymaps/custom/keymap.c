@@ -32,8 +32,9 @@ enum charybdis_keymap_layers {
 
 // Custom keycodes
 enum custom_keycodes {
-    CRTSCRX = SAFE_RANGE,     // Caret scroll mode X-axis
-    CRTSCRY,                  // Caret scroll mode Y-axis
+    CRTSCR = SAFE_RANGE,     // Caret scroll mode XY-axis
+    CRTSCRX,                 // Caret scroll mode X-axis
+    CRTSCRY,                 // Caret scroll mode Y-axis
     VS_DEF,
     VS_IMPL,
     VS_REF,
